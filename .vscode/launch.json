@@ -1,0 +1,17 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "args": ["--test", "--models", "/media/greg/NSFW/shielded-dreams/results/gridworld-20-FINAL-noshield-4x4/models_400.pth", "--paths-to-sample", "40", "--violation-threshold", "3"]
+            // "args": ["--seed-episodes", "1", "--action-noise", "0.0", "--test-episodes", "3", "--test-interval", "1", "--collect-interval", "1", "--max-episode-length", "600"]
+        }
+    ]
+}
