@@ -5,6 +5,8 @@ import torch.distributions
 from torch.distributions.normal import Normal
 from torch.distributions.transformed_distribution import TransformedDistribution
 from agent.models import SampleDist, TanhBijector
+import sys
+sys.path.insert(1, '/vol/bitbucket/id419/projenv/gfn')
 from gfn.modules import GFNModule
 
 class GFlowNetWrapperModel(jit.ScriptModule):
