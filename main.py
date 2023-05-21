@@ -13,7 +13,7 @@ from env.memory import ExperienceReplay
 from agent.models import bottle, Encoder, ObservationModel, RewardModel, TransitionModel, ValueModel, ActorModel, ViolationModel
 from agent.new_models import GFlowNetWrapperModel
 from agent.planner import MPCPlanner
-# from shields.bps import BoundedPrescienceShield, ShieldBatcher
+from shields.bps import BoundedPrescienceShield, ShieldBatcher
 from shields.gridworld import GridWorldShield, ShieldBatcher
 from utils import lineplot, write_video, imagine_ahead, lambda_return, FreezeParameters, ActivateParameters
 from torch.utils.tensorboard import SummaryWriter
