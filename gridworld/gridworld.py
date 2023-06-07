@@ -228,11 +228,11 @@ class GridWorld:
 if __name__ == '__main__':
     from matplotlib import pyplot as plt
     g = GridWorld()
-    g.render()
+    # g.render()
     while True:
         action = input('Pls give an action: ')
         if action == 'exit':
             exit()
         reward = g.step(GridWorldAction(int(action)))
         print(f'Received reward of {reward}')
-        g.render()
+        # g.render()

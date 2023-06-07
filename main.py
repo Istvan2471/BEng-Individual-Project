@@ -18,6 +18,8 @@ from shields.gridworld import GridWorldShield, ShieldBatcher
 from utils import lineplot, write_video, imagine_ahead, lambda_return, FreezeParameters, ActivateParameters
 from torch.utils.tensorboard import SummaryWriter
 
+from agent.flow_match_estimation import estimate_fm_value
+
 
 # Hyperparameters
 parser = argparse.ArgumentParser(description='PlaNet or Dreamer')
@@ -333,8 +335,11 @@ for episode in tqdm(range(metrics['episodes'][-1] + 1, args.episodes + 1), total
     with FreezeParameters(model_modules + value_model.modules):
       imged_reward = bottle(reward_model, (imged_beliefs, imged_prior_states))
       value_pred = bottle(value_model, (imged_beliefs, imged_prior_states))
-    returns = lambda_return(imged_reward, value_pred, bootstrap=value_pred[-1], discount=args.discount, lambda_=args.disclam)
+
+    # returns = lambda_return(imged_reward, value_pred, bootstrap=value_pred[-1], discount=args.discount, lambda_=args.disclam)
+    returns = estimate_fm_value(imged_prior_states, imged_reward)
     actor_loss = -torch.mean(returns)
+
     # Update model parameters
     actor_optimizer.zero_grad()
     actor_loss.backward()
