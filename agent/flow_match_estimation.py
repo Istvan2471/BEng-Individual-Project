@@ -11,13 +11,14 @@ from gfn.estimators import LogEdgeFlowEstimator
 from gfn.losses.base import Parametrization, StateDecomposableLoss
 from gfn.losses import FMParametrization
 from gfn.samplers import DiscreteActionsSampler, TrajectoriesSampler
+from gfn.modules import NeuralNet
 
 ScoresTensor = TensorType["n_states", float]
 LossTensor = TensorType[0, float]
 
 def estimate_fm_value(states, imged_rewards):
     env = HyperGrid(ndim=2, height=64)
-    estimator = LogEdgeFlowEstimator(env=env)
+    estimator = LogEdgeFlowEstimator(env=env, module=NeuralNet)
     parametrization = FMParametrization(estimator=estimator)
     loss_fn = FlowMatching(parametrization=parametrization)
     states_container = States(states_tensor=states)
