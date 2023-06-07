@@ -18,7 +18,7 @@ LossTensor = TensorType[0, float]
 
 def estimate_fm_value(states, imged_rewards):
     env = HyperGrid(ndim=2, height=64)
-    estimator = LogEdgeFlowEstimator(env=env, module=NeuralNet)
+    estimator = LogEdgeFlowEstimator(env=env, module_name="NeuralNet")
     parametrization = FMParametrization(estimator=estimator)
     loss_fn = FlowMatching(parametrization=parametrization)
     states_container = States(states_tensor=states)
