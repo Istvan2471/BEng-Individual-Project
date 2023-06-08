@@ -22,7 +22,7 @@ def estimate_fm_value(states, imged_rewards):
     estimator = LogEdgeFlowEstimator(env=env, module_name="NeuralNet")
     parametrization = FMParametrization(logF=estimator)
     loss_fn = FlowMatching(parametrization=parametrization)
-    states_container = States(states_tensor=states, state_shape=env.ndim)
+    states_container = States(states_tensor=states, state_shape=(env.ndim,))
     return loss_fn(states_container, imged_rewards)
 
 class FlowMatching(StateDecomposableLoss):
