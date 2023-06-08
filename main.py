@@ -338,6 +338,7 @@ for episode in tqdm(range(metrics['episodes'][-1] + 1, args.episodes + 1), total
 
     # returns = lambda_return(imged_reward, value_pred, bootstrap=value_pred[-1], discount=args.discount, lambda_=args.disclam)
     if isinstance(env, GridEnv):
+      shaped_states = torch.reshape(imged_prior_states, (2, args.planning_horizon))
       returns = estimate_fm_value(imged_prior_states, imged_reward)
     else:
       returns = lambda_return(imged_reward, value_pred, bootstrap=value_pred[-1], discount=args.discount, lambda_=args.disclam)
