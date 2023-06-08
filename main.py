@@ -8,7 +8,7 @@ from torch.distributions.kl import kl_divergence
 from torch.nn import functional as F
 from torchvision.utils import make_grid, save_image
 from tqdm import tqdm
-from env.env import CONTROL_SUITE_ENVS, Env, GYM_ENVS, EnvBatcher
+from env.env import CONTROL_SUITE_ENVS, Env, GYM_ENVS, EnvBatcher, GridEnv
 from env.memory import ExperienceReplay
 from agent.models import bottle, Encoder, ObservationModel, RewardModel, TransitionModel, ValueModel, ActorModel, ViolationModel
 from agent.new_models import GFlowNetWrapperModel
@@ -337,7 +337,7 @@ for episode in tqdm(range(metrics['episodes'][-1] + 1, args.episodes + 1), total
       value_pred = bottle(value_model, (imged_beliefs, imged_prior_states))
 
     # returns = lambda_return(imged_reward, value_pred, bootstrap=value_pred[-1], discount=args.discount, lambda_=args.disclam)
-    if env.isinstance(GridEnv):
+    if isinstance(env, GridEnv):
       returns = estimate_fm_value(imged_prior_states, imged_reward)
     else:
       returns = lambda_return(imged_reward, value_pred, bootstrap=value_pred[-1], discount=args.discount, lambda_=args.disclam)
