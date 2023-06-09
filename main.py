@@ -340,9 +340,9 @@ for episode in tqdm(range(metrics['episodes'][-1] + 1, args.episodes + 1), total
     if isinstance(env, GridEnv):
       flattened_beliefs, flattened_states = \
         torch.flatten(imged_beliefs, start_dim=0), torch.flatten(imged_prior_states, start_dim=0)
-      imged_observations = observation_model.forward(imged_beliefs, imged_prior_states)
+      imged_observations = observation_model.forward(flattened_beliefs, flattened_prior_states)
       reshaped_observations = torch.reshape(imged_observations, (14, 2250, 2))
-      returns = estimate_fm_value(imged_observations, imged_reward)
+      returns = estimate_fm_value(reshaped_observations, imged_reward)
     else:
       returns = lambda_return(imged_reward, value_pred, bootstrap=value_pred[-1], discount=args.discount, lambda_=args.disclam)
     actor_loss = -torch.mean(returns)
