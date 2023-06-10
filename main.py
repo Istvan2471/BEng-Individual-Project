@@ -331,17 +331,14 @@ for episode in tqdm(range(metrics['episodes'][-1] + 1, args.episodes + 1), total
       actor_beliefs = beliefs.detach()
     with FreezeParameters(model_modules):
       imagination_traj = imagine_ahead(actor_states, actor_beliefs, actor_model, transition_model, args.planning_horizon)
-    imged_beliefs, imged_prior_states, imged_prior_means, imged_prior_std_devs = imagination_traj
+    imged_beliefs, imged_prior_states, imged_prior_means, imged_prior_std_devs, imged_taken_actions = imagination_traj
     with FreezeParameters(model_modules + value_model.modules):
       imged_reward = bottle(reward_model, (imged_beliefs, imged_prior_states))
       value_pred = bottle(value_model, (imged_beliefs, imged_prior_states))
 
     # returns = lambda_return(imged_reward, value_pred, bootstrap=value_pred[-1], discount=args.discount, lambda_=args.disclam)
     if isinstance(env, GridEnv):
-      flattened_beliefs, flattened_states = \
-        torch.flatten(imged_beliefs, start_dim=0, end_dim=1), torch.flatten(imged_prior_states, start_dim=0, end_dim=1)
-      imged_observations = observation_model.forward(flattened_beliefs, flattened_states)
-      reshaped_observations = torch.reshape(imged_observations, (14, 2250, 2))
+      print(imged_taken_actions.size())
       returns = estimate_fm_value(reshaped_observations, imged_reward)
     else:
       returns = lambda_return(imged_reward, value_pred, bootstrap=value_pred[-1], discount=args.discount, lambda_=args.disclam)

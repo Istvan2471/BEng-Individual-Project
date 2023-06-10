@@ -55,13 +55,15 @@ def imagine_ahead(prev_state, prev_belief, policy, transition_model, planning_ho
   
   # Create lists for hidden states (cannot use single tensor as buffer because autograd won't work with inplace writes)
   T = planning_horizon
-  beliefs, prior_states, prior_means, prior_std_devs = [torch.empty(0)] * T, [torch.empty(0)] * T, [torch.empty(0)] * T, [torch.empty(0)] * T
+  beliefs, prior_states, prior_means, prior_std_devs, taken_actions = \
+    [torch.empty(0)] * T, [torch.empty(0)] * T, [torch.empty(0)] * T, [torch.empty(0)] * T, [torch.empty(0)] * T
   beliefs[0], prior_states[0] = prev_belief, prev_state
 
   # Loop over time sequence
   for t in range(T - 1):
     _state = prior_states[t]
     actions = policy.get_action(beliefs[t].detach(), _state.detach())
+    taken_actions[t] = actions
 
     # Compute belief (deterministic hidden state)
     hidden = transition_model.act_fn(transition_model.fc_embed_state_action(torch.cat([_state, actions], dim=1)))
@@ -73,7 +75,8 @@ def imagine_ahead(prev_state, prev_belief, policy, transition_model, planning_ho
     prior_states[t + 1] = prior_means[t + 1] + prior_std_devs[t + 1] * torch.randn_like(prior_means[t + 1])     
   # Return new hidden states
   # imagined_traj = [beliefs, prior_states, prior_means, prior_std_devs]
-  imagined_traj = [torch.stack(beliefs[1:], dim=0), torch.stack(prior_states[1:], dim=0), torch.stack(prior_means[1:], dim=0), torch.stack(prior_std_devs[1:], dim=0)]
+  imagined_traj = [torch.stack(beliefs[1:], dim=0), torch.stack(prior_states[1:], dim=0), torch.stack(prior_means[1:], dim=0), \
+                   torch.stack(prior_std_devs[1:], dim=0), torch.stack(taken_actions[:-1], dim=0)]
   return imagined_traj
 
 def lambda_return(imged_reward, value_pred, bootstrap, discount=0.99, lambda_=0.95):
