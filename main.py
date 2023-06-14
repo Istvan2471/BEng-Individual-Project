@@ -108,13 +108,24 @@ if args.experience_replay != '' and os.path.exists(args.experience_replay):
   metrics['steps'], metrics['episodes'] = [D.steps] * D.episodes, list(range(1, D.episodes + 1))
 elif not args.test:
   D = ExperienceReplay(args.experience_size, args.symbolic_env, env.observation_size, env.action_size, args.bit_depth, args.device)
+
+  # if gridworld, we need to be able to access agent coords for gflownets
+  if isinstance(env, GridEnv):
+    agent_positions = []
+
   # Initialise dataset D with S random seed episodes
   for s in range(1, args.seed_episodes + 1):
     violation_count = 0
     observation, done, t = env.reset(), False, 0
     while not done:
       action = env.sample_random_action()
+
+      # get agent's position before taking action if gridworld
+      if isinstance(env, GridEnv):
+        agent_positions.append(env._env._agent_position)
+
       next_observation, reward, violation, done = env.step(action)
+
       if violation:
         # reward -= 40
         violation_count += 1
@@ -338,8 +349,9 @@ for episode in tqdm(range(metrics['episodes'][-1] + 1, args.episodes + 1), total
 
     # returns = lambda_return(imged_reward, value_pred, bootstrap=value_pred[-1], discount=args.discount, lambda_=args.disclam)
     if isinstance(env, GridEnv):
-      print(imged_taken_actions.size())
-      returns = estimate_fm_value(reshaped_observations, imged_reward)
+      decoded_states = observation_model(imged_beliefs, imged_prior_states)
+      print(decoded_states.size())
+      #returns = estimate_fm_value(reshaped_observations, imged_reward)
     else:
       returns = lambda_return(imged_reward, value_pred, bootstrap=value_pred[-1], discount=args.discount, lambda_=args.disclam)
     actor_loss = -torch.mean(returns)

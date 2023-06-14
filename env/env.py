@@ -184,7 +184,7 @@ class GridEnv():
 
     @property
     def observation_size(self):
-        return (3, 64, 64)
+        return len(self._env.size) + sum(len(u) for u in self._env._unsafe_positions) + len(self._env._target_position)
 
     @property
     def action_size(self):
