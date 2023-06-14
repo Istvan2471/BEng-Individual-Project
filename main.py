@@ -349,8 +349,9 @@ for episode in tqdm(range(metrics['episodes'][-1] + 1, args.episodes + 1), total
 
     # returns = lambda_return(imged_reward, value_pred, bootstrap=value_pred[-1], discount=args.discount, lambda_=args.disclam)
     if isinstance(env, GridEnv):
-      decoded_states = observation_model(imged_beliefs, imged_prior_states)
-      print(decoded_states.size())
+      for (imged_belief, imged_prior_state) in zip(imged_beliefs, imged_prior_states):
+        decoded_state = observation_model(imged_belief, imged_prior_state)
+        print(decoded_states.size())
       #returns = estimate_fm_value(reshaped_observations, imged_reward)
     else:
       returns = lambda_return(imged_reward, value_pred, bootstrap=value_pred[-1], discount=args.discount, lambda_=args.disclam)
