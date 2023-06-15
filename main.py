@@ -354,8 +354,8 @@ for episode in tqdm(range(metrics['episodes'][-1] + 1, args.episodes + 1), total
         decoded_state = observation_model.forward(imged_belief, imged_prior_state)
         agent_positions.append(torch.split(decoded_state, 2, dim=1)[0])
       
-      torch.cat(agent_positions, dim=0)
-      returns = estimate_fm_value(agent_positions, imged_reward)
+      pos_tensor = torch.cat(agent_positions, dim=0)
+      returns = estimate_fm_value(pos_tensor, imged_reward)
     else:
       returns = lambda_return(imged_reward, value_pred, bootstrap=value_pred[-1], discount=args.discount, lambda_=args.disclam)
     actor_loss = -torch.mean(returns)
