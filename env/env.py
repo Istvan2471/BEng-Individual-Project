@@ -162,14 +162,21 @@ class GridEnv():
     def reset(self):
         self._env.reset()
         self._t = 0
-        return _images_to_observation(self._env.render(), self.bit_depth)
+        return self.observation()
 
+    def observation(self):
+         return torch.as_tensor(list(self._env._agent_position) + \
+            [coord for unsafe_pos in self._env._unsafe_positions for coord in unsafe_pos] + \
+            list(self._env._target_position))
+    
     def step(self, action):
         decoded_action = self.__tensor_to_action__(action)
         # Do action
         reward, violation = self._env.step(decoded_action)
-        observation = _images_to_observation(
-            self._env.render(), self.bit_depth)
+        # observation = _images_to_observation(
+        #     self._env.render(), self.bit_depth)
+        observation = self.observation()
+
         self._t += 1
         done = self._t == self.max_episode_length
         if done:
@@ -324,10 +331,10 @@ class GymEnv():
 
 def Env(env, symbolic, seed, max_episode_length, action_repeat, bit_depth, stickiness):
     # TODO: remove this short circuit
-    if symbolic:
-        return DrivingEnv(env, symbolic, seed, max_episode_length, action_repeat, bit_depth, stickiness)
-    else:
-        return GridEnv(env, symbolic, seed, max_episode_length, action_repeat, bit_depth)
+    # if symbolic:
+    #     return DrivingEnv(env, symbolic, seed, max_episode_length, action_repeat, bit_depth, stickiness)
+    # else:
+    return GridEnv(env, symbolic, seed, max_episode_length, action_repeat, bit_depth)
     if env in GYM_ENVS:
         return GymEnv(env, symbolic, seed, max_episode_length, action_repeat, bit_depth)
     elif env in CONTROL_SUITE_ENVS:
