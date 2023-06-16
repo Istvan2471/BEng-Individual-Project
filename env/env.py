@@ -167,7 +167,7 @@ class GridEnv():
     def observation(self):
          return torch.as_tensor(list(self._env._agent_position) + \
             [coord for unsafe_pos in self._env._unsafe_positions for coord in unsafe_pos] + \
-            list(self._env._target_position))
+            list(self._env._target_position), dtype=int)
     
     def step(self, action):
         decoded_action = self.__tensor_to_action__(action)
