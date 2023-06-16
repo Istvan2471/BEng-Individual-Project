@@ -1,14 +1,14 @@
 from gfn.containers.states import States
 from gfn.envs import HyperGrid
 from gfn.envs.env import TensorLong, TensorBool, correct_cast, NonValidActionsError
-from torch import clone, gather, int64
+from torch import clone, gather
 from copy import deepcopy
 
 class ModifiedHyperGrid(HyperGrid):
     def backward_step(self, states: States, actions: TensorLong) -> States:
         """Function that takes a batch of states and actions and returns a batch of next
         states and a boolean tensor indicating initial states in the new batch."""
-        states_copy = states.states_tensor.clone().to(dtype=int64)
+        states_copy = states.states_tensor.clone()
         new_states = self.make_States_class()(states_tensor=states_copy)
         valid_states: TensorBool = ~new_states.is_initial_state
         valid_actions = actions[valid_states]
