@@ -356,7 +356,7 @@ for episode in tqdm(range(metrics['episodes'][-1] + 1, args.episodes + 1), total
       
       pos_tensor = torch.cat(agent_positions, dim=0)
       rewards_concat = torch.flatten(imged_reward, start_dim=0, end_dim=1)
-      returns = estimate_fm_value(pos_tensor, rewards_concat)
+      returns = estimate_fm_value(pos_tensor, rewards_concat).to(torch.float)
     else:
       returns = lambda_return(imged_reward, value_pred, bootstrap=value_pred[-1], discount=args.discount, lambda_=args.disclam)
     actor_loss = -torch.mean(returns)
