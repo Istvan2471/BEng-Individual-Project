@@ -357,7 +357,6 @@ for episode in tqdm(range(metrics['episodes'][-1] + 1, args.episodes + 1), total
       pos_tensor = torch.cat(agent_positions, dim=0)
       rewards_concat = torch.flatten(imged_reward, start_dim=0, end_dim=1)
       returns = estimate_fm_value(pos_tensor, rewards_concat)
-      print(returns.type())
     else:
       returns = lambda_return(imged_reward, value_pred, bootstrap=value_pred[-1], discount=args.discount, lambda_=args.disclam)
     actor_loss = -torch.mean(returns)
@@ -407,6 +406,7 @@ for episode in tqdm(range(metrics['episodes'][-1] + 1, args.episodes + 1), total
   violations = 0
   with torch.no_grad():
     observation, total_reward = env.reset(), 0
+    print(observation.type())
     belief, posterior_state, action, violation = torch.zeros(1, args.belief_size, device=args.device), torch.zeros(1, args.state_size, device=args.device), torch.zeros(1, env.action_size, device=args.device), torch.zeros(1, 1, device=args.device)
     pbar = tqdm(range(args.max_episode_length // args.action_repeat))
     for t in pbar:
