@@ -41,7 +41,7 @@ class FlowMatching(StateDecomposableLoss):
         """
 
         assert len(states.batch_shape) == 1
-        assert not torch.any(states.is_initial_state)
+        # assert not torch.any(states.is_initial_state)
 
         states.forward_masks, states.backward_masks = correct_cast(
             states.forward_masks, states.backward_masks
