@@ -9,8 +9,7 @@ class ModifiedHyperGrid(HyperGrid):
         """Function that takes a batch of states and actions and returns a batch of next
         states and a boolean tensor indicating initial states in the new batch."""
         states_copy = states.states_tensor.clone()
-        print(states_copy.size())
-        new_states = self.make_States_class(states_copy)
+        new_states = self.make_States_class()(states_tensor=states_copy)
         valid_states: TensorBool = ~new_states.is_initial_state
         valid_actions = actions[valid_states]
 
