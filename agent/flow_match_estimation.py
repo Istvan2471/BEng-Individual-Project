@@ -23,7 +23,7 @@ def estimate_fm_value(states, imged_rewards):
     parametrization = FMParametrization(logF=estimator)
     loss_fn = FlowMatching(parametrization=parametrization)
     states_container = env.make_States_class()(states_tensor=states)
-    return loss_fn(states_container, imged_rewards)
+    return loss_fn(states_container.to('cuda'), imged_rewards)
 
 class FlowMatching(StateDecomposableLoss):
     def __init__(self, parametrization: FMParametrization, alpha=1.0) -> None:
