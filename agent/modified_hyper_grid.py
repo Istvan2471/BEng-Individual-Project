@@ -7,7 +7,7 @@ class ModifiedHyperGrid(HyperGrid):
     def backward_step(self, states: States, actions: TensorLong) -> States:
         """Function that takes a batch of states and actions and returns a batch of next
         states and a boolean tensor indicating initial states in the new batch."""
-        new_states = clone(states)
+        new_states = states.clone()
         valid_states: TensorBool = ~new_states.is_initial_state
         valid_actions = actions[valid_states]
 
