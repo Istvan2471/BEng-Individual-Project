@@ -93,7 +93,7 @@ class FlowMatching(StateDecomposableLoss):
     def reward_matching_loss(self, terminating_states: States, rewards) -> LossTensor:
         log_edge_flows = self.parametrization.logF(terminating_states)
         terminating_log_edge_flows = log_edge_flows[:, -1]
-        log_rewards = torch.log(rewards)
+        log_rewards = torch.nan_to_num(torch.log(rewards), nan=0.0, neginf=-1000000.0)
         return terminating_log_edge_flows - log_rewards
 
     def __call__(self, states: States, rewards) -> LossTensor:
