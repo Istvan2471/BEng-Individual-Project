@@ -355,7 +355,7 @@ for episode in tqdm(range(metrics['episodes'][-1] + 1, args.episodes + 1), total
         agent_positions.append(torch.split(decoded_state, 2, dim=1)[0])
       
       pos_tensor = torch.cat(agent_positions, dim=0)
-      rewards_concat = torch.cat(imged_reward, dim=0)
+      rewards_concat = torch.flatten(imged_reward, start_dim=0, end_dim=1)
       returns = estimate_fm_value(pos_tensor, rewards_concat)
     else:
       returns = lambda_return(imged_reward, value_pred, bootstrap=value_pred[-1], discount=args.discount, lambda_=args.disclam)
