@@ -168,7 +168,7 @@ class GridEnv():
         flat_obs = torch.as_tensor(list(self._env._agent_position) + \
             [coord for unsafe_pos in self._env._unsafe_positions for coord in unsafe_pos] + \
             list(self._env._target_position), dtype=torch.float)
-        return torch.reshape(flat_obs, (1, flat_obs.size()))
+        return torch.reshape(flat_obs, (1, flat_obs.size(dim=0)))
     
     def step(self, action):
         decoded_action = self.__tensor_to_action__(action)
