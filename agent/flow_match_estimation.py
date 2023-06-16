@@ -6,6 +6,7 @@ from torchtyping import TensorType
 
 from gfn.containers.states import correct_cast
 from agent.modified_states import States
+from agent.modified_hyper_grid import ModifiedHyperGrid
 from gfn.distributions import EmpiricalTrajectoryDistribution, TrajectoryDistribution
 from gfn.envs import Env, HyperGrid
 from gfn.estimators import LogEdgeFlowEstimator
@@ -18,7 +19,7 @@ ScoresTensor = TensorType["n_states", float]
 LossTensor = TensorType[0, float]
 
 def estimate_fm_value(states, imged_rewards):
-    env = HyperGrid(ndim=2, height=64, device_str="cuda")
+    env = ModifiedHyperGrid(ndim=2, height=64, device_str="cuda")
     estimator = LogEdgeFlowEstimator(env=env, module_name="NeuralNet")
     parametrization = FMParametrization(logF=estimator)
     loss_fn = FlowMatching(parametrization=parametrization)
