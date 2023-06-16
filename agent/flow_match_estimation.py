@@ -18,12 +18,12 @@ ScoresTensor = TensorType["n_states", float]
 LossTensor = TensorType[0, float]
 
 def estimate_fm_value(states, imged_rewards):
-    env = HyperGrid(ndim=2, height=64)
+    env = HyperGrid(ndim=2, height=64, device_str="cuda")
     estimator = LogEdgeFlowEstimator(env=env, module_name="NeuralNet")
     parametrization = FMParametrization(logF=estimator)
     loss_fn = FlowMatching(parametrization=parametrization)
     states_container = env.make_States_class()(states_tensor=states)
-    return loss_fn(states_container.to('cuda'), imged_rewards)
+    return loss_fn(states_container, imged_rewards)
 
 class FlowMatching(StateDecomposableLoss):
     def __init__(self, parametrization: FMParametrization, alpha=1.0) -> None:
@@ -40,7 +40,7 @@ class FlowMatching(StateDecomposableLoss):
         """
 
         assert len(states.batch_shape) == 1
-        # assert not torch.any(states.is_initial_state)
+        assert not torch.any(states.is_initial_state)
 
         states.forward_masks, states.backward_masks = correct_cast(
             states.forward_masks, states.backward_masks
