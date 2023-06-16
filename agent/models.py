@@ -60,7 +60,6 @@ class TransitionModel(jit.ScriptModule):
       # Compute belief (deterministic hidden state)
       hidden = self.act_fn(self.fc_embed_state_action(torch.cat([_state, actions[t]], dim=1)))
       beliefs[t + 1] = self.rnn(hidden, beliefs[t])
-      print(beliefs[t+1].size())
       # Compute state prior by applying transition dynamics
       hidden = self.act_fn(self.fc_embed_belief_prior(beliefs[t + 1]))
       prior_means[t + 1], _prior_std_dev = torch.chunk(self.fc_state_prior(hidden), 2, dim=1)
