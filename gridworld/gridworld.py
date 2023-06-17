@@ -222,7 +222,8 @@ class GridWorld:
         return self._viewer.render(return_rgb_array=True)
     
     def close(self):
-        self._viewer.close()
+        if (self._viewer is not None):
+            self._viewer.close()
 
 
 if __name__ == '__main__':
