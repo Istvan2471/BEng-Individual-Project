@@ -19,7 +19,7 @@ ScoresTensor = TensorType["n_states", float]
 LossTensor = TensorType[0, float]
 
 def estimate_fm_value(states, imged_rewards):
-    env = ModifiedHyperGrid(ndim=2, height=64, device_str="cuda")
+    env = ModifiedHyperGrid(ndim=2, height=64, device_str="cuda", preprocessor_name="Identity")
     estimator = LogEdgeFlowEstimator(env=env, module_name="NeuralNet")
     parametrization = FMParametrization(logF=estimator)
     loss_fn = FlowMatching(parametrization=parametrization)
