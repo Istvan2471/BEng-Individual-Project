@@ -24,7 +24,9 @@ def estimate_fm_value(states, imged_rewards):
     parametrization = FMParametrization(logF=estimator)
     loss_fn = FlowMatching(parametrization=parametrization)
     states_container = env.make_States_class()(states_tensor=states.to(torch.long))
-    return loss_fn(states_container, imged_rewards)
+    losses = loss_fn(states_container, imged_rewards)
+    losses.backward()
+    return losses
 
 class FlowMatching(StateDecomposableLoss):
     def __init__(self, parametrization: FMParametrization, alpha=1.0) -> None:
